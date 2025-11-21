@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiService } from "../../api/apiService";
 import Form from "../../components/Forms";
-import ChatBubble from "../../components/ChatBubble"; // <- AGREGAR
 import "./WashForm.css";
 
 const WashForm = () => {
@@ -21,6 +20,7 @@ const WashForm = () => {
   const [selectedServices, setSelectedServices] = useState([]);
   const [clients, setClients] = useState([]);
   const [cars, setCars] = useState([]);
+  console.log(cars)
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(!!id);
   const [error, setError] = useState("");
@@ -61,6 +61,7 @@ const WashForm = () => {
     fetchData();
   }, [id]);
 
+  // Calcular total cuando cambian los servicios seleccionados
   useEffect(() => {
     const newTotal = selectedServices.reduce(
       (sum, service) => sum + service.price,
@@ -173,7 +174,7 @@ const WashForm = () => {
       value: formData.total.toFixed(2),
       readOnly: true,
       required: true,
-    },
+    }, 
   ];
 
   if (loading) {
@@ -200,6 +201,7 @@ const WashForm = () => {
                 </option>
               ))}
           </select>
+       
         </div>
 
         <div className="selected-services">
@@ -226,7 +228,6 @@ const WashForm = () => {
           </div>
         </div>
       </div>
-      
       <Form
         fields={fields}
         onSubmit={handleSubmit}
@@ -234,9 +235,6 @@ const WashForm = () => {
         successMessage={successMessage}
         submitText={id ? "Actualizar Lavado" : "Registrar Lavado"}
       />
-
-      {/* Burbuja de chat flotante */}
-      <ChatBubble contextMessage="Necesito ayuda con el registro de lavado" />
     </div>
   );
 };

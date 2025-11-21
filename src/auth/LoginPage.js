@@ -15,33 +15,56 @@ function LoginPage() {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-    
+
+    // Convertir datos a formato x-www-form-urlencoded
+    const formData = new URLSearchParams();
+    formData.append('username', username);
+    formData.append('password', password);
+
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
+      const response = await fetch('https://sanfelipe-gchccshmg4b9f7b9.canadacentral-01.azurewebsites.net/auth/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-        
+        credentials: 'include',
+        body: formData,
+        signal: controller.signal,
       });
-      
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const token = await response.text();
+        console.log('Token recibido:', token);
         localStorage.setItem('token', token);
         login();
         navigate('/services');
       } else {
         const errorText = await response.text();
-        setError(errorText || 'Credenciales incorrectas');
+        console.error('Error del servidor:', response.status, errorText);
+        
+        if (response.status === 403) {
+          setError('Usuario o contraseña incorrectos');
+        } else if (response.status === 503 || response.status === 502) {
+          setError('El servidor está iniciando. Espera 30 segundos e intenta de nuevo.');
+        } else {
+          setError(errorText || 'Error al iniciar sesión');
+        }
       }
     } catch (error) {
-      setError('Error al conectar con el servidor');
       console.error('Login error:', error);
+      
+      if (error.name === 'AbortError') {
+        setError('El servidor está tardando mucho. Intenta nuevamente en 1 minuto.');
+      } else if (error.message?.includes('fetch') || error.message?.includes('network')) {
+        setError('El servidor está iniciando (puede tardar 1-2 minutos). Por favor espera e intenta de nuevo.');
+      } else {
+        setError('Error al conectar. Verifica tu conexión a internet.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -54,10 +77,10 @@ function LoginPage() {
           <h2>Bienvenido</h2>
           <p>Ingresa tus credenciales para continuar</p>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="login-form">
           {error && <div className="error-message">{error}</div>}
-          
+
           <div className="form-group">
             <label htmlFor="username">Usuario</label>
             <input
@@ -70,7 +93,7 @@ function LoginPage() {
             />
             <i className="icon-user"></i>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Contraseña</label>
             <input
@@ -83,9 +106,9 @@ function LoginPage() {
             />
             <i className="icon-lock"></i>
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             className="login-button"
             disabled={isLoading}
           >
@@ -95,7 +118,7 @@ function LoginPage() {
               'Iniciar Sesión'
             )}
           </button>
-          
+
           <div className="footer-links">
             <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
             <a href="/register">Crear una cuenta</a>

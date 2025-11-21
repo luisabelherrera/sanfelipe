@@ -18,7 +18,7 @@ const NavBar = () => {
     <nav className="navbar">
       <div className="navbar-brand">
         <Link to="/" className="logo-link">
-          <span className="logo-icon">🚗</span>
+          <span className="logo-icon">🚕🏍️🚐</span>
           <span className="logo-text">Wash-App Pro</span>
         </Link>
       </div>
@@ -29,11 +29,17 @@ const NavBar = () => {
           <Link to="/washes/new" className="nav-link">
             <i className="fas fa-car-wash"></i> Nuevo Lavado
           </Link>
+          <Link to="/payments" className="nav-link">
+            <i className="fas fa-history"></i> Pagos
+          </Link>
           <Link to="/washes" className="nav-link">
             <i className="fas fa-history"></i> Historial
           </Link>
-          <Link to="/payments" className="nav-link">
-            <i className="fas fa-history"></i> Pagos
+          <Link to="/predictions" className="nav-link">
+            <i className="fas fa-chart-line"></i> Predicción del Día
+          </Link>
+          <Link to="/prediction-history" className="nav-link">
+            <i className="fas fa-history"></i> Historial de Predicciones
           </Link>
         </div>
 

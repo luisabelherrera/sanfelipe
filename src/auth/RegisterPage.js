@@ -10,7 +10,7 @@ const RegisterPage = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/auth/register", {
+      const response = await fetch("https://sanfelipe-gchccshmg4b9f7b9.canadacentral-01.azurewebsites.net/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

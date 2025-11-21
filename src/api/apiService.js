@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "https://sanfelipe-gchccshmg4b9f7b9.canadacentral-01.azurewebsites.net";
 
 const fetchWithAuth = async (endpoint, options = {}) => {
   const token = localStorage.getItem("token");
@@ -13,6 +13,7 @@ const fetchWithAuth = async (endpoint, options = {}) => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers,
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -105,15 +106,18 @@ export const apiService = {
   // Pagos de empleados
   calculateEmployeePayment: (employeeId, startDate, endDate) =>
     fetchWithAuth(
-      `/washed/employee/${employeeId}/payment?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
-    , { method: "GET" }),
+      `/washed/employee/${employeeId}/payment?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+      { method: "GET" }
+    ),
 
-  // ============================================
-  // CHAT - Nuevo método para el asistente virtual
-  // ============================================
-  sendChatMessage: (message) =>
-    fetchWithAuth("/chat/message", {
+  // Predicciones
+  predictDemand: (data) =>
+    fetchWithAuth("/api/predecir", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify(data),
+    }),
+  getPredictionHistory: () =>
+    fetchWithAuth("/api/historial", {
+      method: "GET",
     }),
 };

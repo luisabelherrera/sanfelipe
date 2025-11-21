@@ -6,7 +6,7 @@
   align-items: center;
   background-color: #0b0c0e;
   padding: 0.8rem 2rem;
-  box-shadow: 0 2px 10px rgba(77, 76, 76, 0.1);
+  box-shadow: 0 2px 10px #00b4d8;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -93,7 +93,7 @@
 }
 
 .nav-dropbtn:hover {
-  background-color: #34495e;
+  background-color: #18ffec94;
   transform: translateY(-2px);
 }
 

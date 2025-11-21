@@ -22,7 +22,7 @@ function RegisterClient() {
     };
 
     try {
-      const response = await fetch("http://localhost:8081/clients/register", {
+      const response = await fetch("https://sanfelipe-gchccshmg4b9f7b9.canadacentral-01.azurewebsites.net/clients/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

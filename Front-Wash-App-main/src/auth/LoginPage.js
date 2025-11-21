@@ -22,6 +22,9 @@ function LoginPage() {
     formData.append('password', password);
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
       const response = await fetch('https://sanfelipe-gchccshmg4b9f7b9.canadacentral-01.azurewebsites.net/auth/login', {
         method: 'POST',
         headers: {
@@ -29,7 +32,10 @@ function LoginPage() {
         },
         credentials: 'include',
         body: formData,
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const token = await response.text();
@@ -40,11 +46,25 @@ function LoginPage() {
       } else {
         const errorText = await response.text();
         console.error('Error del servidor:', response.status, errorText);
-        setError(errorText || 'Credenciales incorrectas');
+        
+        if (response.status === 403) {
+          setError('Usuario o contraseña incorrectos');
+        } else if (response.status === 503 || response.status === 502) {
+          setError('El servidor está iniciando. Espera 30 segundos e intenta de nuevo.');
+        } else {
+          setError(errorText || 'Error al iniciar sesión');
+        }
       }
     } catch (error) {
-      setError('Error al conectar con el servidor');
       console.error('Login error:', error);
+      
+      if (error.name === 'AbortError') {
+        setError('El servidor está tardando mucho. Intenta nuevamente en 1 minuto.');
+      } else if (error.message?.includes('fetch') || error.message?.includes('network')) {
+        setError('El servidor está iniciando (puede tardar 1-2 minutos). Por favor espera e intenta de nuevo.');
+      } else {
+        setError('Error al conectar. Verifica tu conexión a internet.');
+      }
     } finally {
       setIsLoading(false);
     }

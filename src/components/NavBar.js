@@ -26,6 +26,9 @@ const NavBar = () => {
       <div className="navbar-links">
         {/* Menú principal */}
         <div className="nav-section">
+          <Link to="/dashboard" className="nav-link">
+            <i className="fas fa-chart-bar"></i> Dashboard
+          </Link>
           <Link to="/washes/new" className="nav-link">
             <i className="fas fa-car-wash"></i> Nuevo Lavado
           </Link>

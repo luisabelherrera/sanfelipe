@@ -25,7 +25,7 @@ function LoginPage() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
 
-      const response = await fetch('https://sanfelipe-gchccshmg4b9f7b9.canadacentral-01.azurewebsites.net/auth/login', {
+      const response = await fetch('localhost:8080', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

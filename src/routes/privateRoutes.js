@@ -17,6 +17,7 @@ import WashForm from "./washed/WashForm";
 import EmployeePayments from "./Employee/EmployeePayments";
 import PredictionForm from "../components/PredictionForm";
 import PredictionHistory from "../components/PredictionHistory";
+import Dashboard from "./Dashboard";
 
 const createProtectedElement = (Component) => (
   <ProtectedRoute>
@@ -25,6 +26,7 @@ const createProtectedElement = (Component) => (
 );
 
 const PrivateRoutes = [
+  { path: "/dashboard", element: createProtectedElement(Dashboard) },
   {
     path: "/register-service",
     element: createProtectedElement(RegisterService),

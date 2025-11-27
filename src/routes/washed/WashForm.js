@@ -76,14 +76,16 @@ const WashForm = () => {
   }, [selectedServices]);
 
   const handleAddService = (serviceId) => {
-    const serviceToAdd = availableServices.find((s) => s.id === serviceId);
-    if (serviceToAdd && !selectedServices.some((s) => s.id === serviceId)) {
+    const id = parseInt(serviceId);
+    const serviceToAdd = availableServices.find((s) => s.id === id);
+    if (serviceToAdd && !selectedServices.some((s) => s.id === id)) {
       setSelectedServices([...selectedServices, serviceToAdd]);
     }
   };
 
   const handleRemoveService = (serviceId) => {
-    setSelectedServices(selectedServices.filter((s) => s.id !== serviceId));
+    const id = parseInt(serviceId);
+    setSelectedServices(selectedServices.filter((s) => s.id !== id));
   };
 
   const handleSubmit = async (e) => {

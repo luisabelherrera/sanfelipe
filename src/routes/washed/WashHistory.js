@@ -14,19 +14,9 @@ const WashHistory = () => {
 
   const fetchAllData = async () => {
     try {
-      const [washesData, servicesData, employeesData, carsData, clientsData] = await Promise.all([
-        apiService.getWashedRecords(),
-        apiService.getServices(),
-        apiService.getEmployees(),
-        apiService.getCars(),
-        apiService.getClients()
-      ]);
+      const washesData = await apiService.getWashedRecords();
       
       setWashes(washesData);
-      setServices(servicesData);
-      setEmployees(employeesData);
-      setCars(carsData);
-      setClients(clientsData);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -71,20 +61,20 @@ const WashHistory = () => {
     { 
       key: 'client', 
       title: 'Cliente',
-      render: (wash) => getClientName(wash.client) 
+      render: (wash) => wash.client ? `${wash.client.name} ${wash.client.lastName}` : 'N/A'
     },
     { 
       key: 'car', 
       title: 'Vehículo',
-      render: (wash) => getCarDetails(wash.car)
+      render: (wash) => wash.car ? `${wash.car.make} ${wash.car.color} (${wash.car.licencePlate})` : 'N/A'
     },
     { 
       key: 'services', 
       title: 'Servicios',
       render: (wash) => (
         <ul style={{ margin: 0, paddingLeft: '20px' }}>
-          {wash.servicesOffered.map(serviceId => (
-            <li key={serviceId}>{getServiceName(serviceId)}</li>
+          {wash.servicesOffered && wash.servicesOffered.map(service => (
+            <li key={service.id}>{service.name} - ${service.price}</li>
           ))}
         </ul>
       )
@@ -92,12 +82,12 @@ const WashHistory = () => {
     { 
       key: 'employee', 
       title: 'Empleado',
-      render: (wash) => getEmployeeName(wash.employee)
+      render: (wash) => wash.employee ? `${wash.employee.name} ${wash.employee.lastName}` : 'N/A'
     },
     { 
       key: 'total', 
       title: 'Total', 
-      render: (wash) => `$${wash.totalPrice.toLocaleString()}` 
+      render: (wash) => `$${(wash.total || 0).toLocaleString()}` 
     },
    
   ];

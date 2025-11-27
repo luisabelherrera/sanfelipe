@@ -82,11 +82,12 @@ export const apiService = {
     fetchWithAuth("/washed/register", {
       method: "POST",
       body: JSON.stringify({
-        client: record.clientId,
-        employee: record.employeeId,
-        car: record.carId,
-        servicesOffered: record.serviceIds,
-        total: record.total,
+        date: record.date,
+        employee: { id: parseInt(record.employeeId) },
+        car: { id: parseInt(record.carId) },
+        servicesOffered: record.serviceIds.map(id => ({ id: parseInt(id) })),
+        total: parseFloat(record.total),
+        observations: record.observations || ""
       }),
     }),
   updateWashedRecord: (id, record) =>
